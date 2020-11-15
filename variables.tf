@@ -5,7 +5,7 @@ variable "environment" {
 
 variable "gitlab_gitaly_ami" {
   description = "AMI id for infra VMs Ubuntu 20.04 by default"
-  default     = "ami-0a91cd140a1fc148a"
+  default     = "ami-0885b1f6bd170450c"
   type        = string
 }
 

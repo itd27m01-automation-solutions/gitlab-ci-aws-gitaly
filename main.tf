@@ -17,14 +17,14 @@ resource "aws_instance" "gitlab_gitaly" {
     Environment = var.environment
     Application = "gitlab"
     Role        = "gitaly"
-    Name        = "gitlab-gitaly-${index(var.gitlab_private_subnets, each.key)}"
+    Name        = "gitlab-gitaly-${var.environment}-${index(var.gitlab_private_subnets, each.key)}"
   }
 }
 
 resource "aws_ebs_volume" "gitaly" {
   count = length(var.gitlab_private_subnets)
 
-  availability_zone = aws_instance.gitlab_gitaly[count.index].availability_zone
+  availability_zone = [for instance in aws_instance.gitlab_gitaly: instance.availability_zone][count.index]
   size              = var.gitlab_gitaly_storage
 }
 
@@ -33,5 +33,5 @@ resource "aws_volume_attachment" "gitaly_ec2" {
 
   device_name = "/dev/sdh"
   volume_id   = aws_ebs_volume.gitaly[count.index].id
-  instance_id = aws_instance.gitlab_gitaly[count.index].id
+  instance_id = [for instance in aws_instance.gitlab_gitaly: instance.id][count.index]
 }
