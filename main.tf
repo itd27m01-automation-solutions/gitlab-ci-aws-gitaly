@@ -1,5 +1,4 @@
 // Creates gitaly EC2 instances with EBS volume
-
 resource "aws_instance" "gitlab_gitaly" {
   for_each = toset(var.gitlab_private_subnets)
 
